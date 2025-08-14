@@ -1,0 +1,142 @@
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import ChoiDot from '../assets/choidot2.jpg';
+import ScrollReveal from 'scrollreveal';
+
+const HomePage = () => {
+  const [news, setNews] = useState([]);
+
+  useEffect(() => {
+    const dummyNews = [
+      {
+        title: 'T.O.P Teases Solo Album Release for 2025',
+        url: 'https://kpopnews.example.com/top-solo-album',
+        publishedAt: '2025-07-01',
+      },
+      {
+        title: 'Behind the Scenes of Squid Game Season 2 with T.O.P',
+        url: 'https://kdrama.example.com/squidgame-top-bts',
+        publishedAt: '2025-06-28',
+      },
+      {
+        title: 'T.O.P Opens Up About His Mental Health Journey',
+        url: 'https://insight.example.com/top-mental-health',
+        publishedAt: '2025-06-15',
+      },
+    ];
+    setNews(dummyNews);
+  }, []);
+
+  useEffect(() => {
+    ScrollReveal().reveal('.sr-fade', {
+      duration: 800,
+      distance: '30px',
+      easing: 'ease-out',
+      origin: 'bottom',
+      interval: 150,
+      reset: false,
+    });
+  }, []);
+
+  return (
+    <section className="min-h-screen flex bg-gradient-to-br from-blue-50 to-white">
+      {/* Left Fixed Image */}
+      <div className="hidden md:flex md:w-1/2 sticky top-0 h-screen justify-center items-center bg-white shadow-xl z-10">
+        <img
+          src={ChoiDot}
+          alt="Choi Seung‑hyun (T.O.P)"
+          className="w-full max-w-md rounded-xl border-4 border-white"
+        />
+      </div>
+
+      {/* Right Scrollable Content */}
+      <div className="w-full md:w-1/2 max-h-screen overflow-y-auto px-6 py-12 space-y-10 text-center md:text-left">
+
+        {/* Intro */}
+        <div className="sr-fade">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-blue-900 leading-tight">
+            Welcome to the <span className="text-pink-600">Official Fan Site</span><br />
+            of <span className="text-purple-600">Choi Seung‑hyun (T.O.P)</span>
+          </h1>
+          <p className="text-lg md:text-xl text-gray-700 mt-4">
+            Dive into the world of T.O.P – the iconic South Korean rapper, actor, and visionary artist.
+            Join a passionate community and celebrate the artistry, evolution, and cultural impact of a true legend.
+          </p>
+        </div>
+
+        {/* Quick Info */}
+        <div className="sr-fade bg-white p-5 rounded-xl border border-blue-100 shadow">
+          <h2 className="text-blue-800 font-semibold text-xl mb-3">About T.O.P</h2>
+          <ul className="text-gray-600 space-y-2">
+            <li><strong>Real Name:</strong> Choi Seung-hyun</li>
+            <li><strong>Born:</strong> November 4, 1987 (age 37)</li>
+            <li><strong>Genres:</strong> K-pop, Hip-hop</li>
+            <li><strong>Instruments:</strong> Vocals</li>
+            <li><strong>Years Active:</strong> 2006–present</li>
+            <li><strong>Formerly Of:</strong> BigBang, GD & TOP</li>
+          </ul>
+        </div>
+
+        {/* Career Highlights */}
+        <div className="sr-fade bg-white p-5 rounded-xl border border-blue-100 shadow">
+          <h2 className="text-blue-800 font-semibold text-xl mb-3">Career Highlights</h2>
+          <ul className="list-disc list-inside text-gray-700 space-y-2">
+            <li>Lead rapper of <strong>BigBang</strong> since 2006</li>
+            <li>Solo singles: <em>Turn It Up</em>, <em>Doom Dada</em></li>
+            <li>Award-winning actor in <em>71: Into the Fire</em>, <em>Commitment</em>, and <em>Squid Game S2</em></li>
+            <li>Famous sub-unit: <strong>GD & TOP</strong></li>
+            <li>Recognized for deep voice, artistic direction, and style</li>
+          </ul>
+        </div>
+
+        {/* Biography */}
+        <article className="sr-fade prose prose-blue prose-lg max-w-none bg-white p-6 rounded-xl border border-blue-100 shadow">
+          <h2>Biography & Career Journey</h2>
+          <p>
+            <strong>Choi Seung-hyun</strong>, professionally known as <strong>T.O.P</strong>, is a celebrated South Korean rapper, songwriter, actor, and art collector.
+            A former underground rapper known as “Tempo,” he rose to fame in 2006 after debuting with the globally influential boy group <strong>BigBang</strong>.
+          </p>
+          <p>
+            With a deep, charismatic voice and a fiercely artistic style, T.O.P expanded into acting with critical success. His role in <em>71: Into the Fire</em>
+            earned him several “Best New Actor” awards, and he later starred in hits like <em>Commitment</em> and <em>Squid Game</em> Season 2 (2024), where he played the fan-favorite character “Thanos.”
+          </p>
+          <p>
+            Outside of music and acting, T.O.P is a passionate art enthusiast and philanthropist, curating exhibitions and contributing to various causes across Asia.
+            His dedication to his craft, experimental sound, and bold personality has cemented his place as one of Korea’s most influential figures.
+          </p>
+        </article>
+
+        {/* Community Links */}
+        <div className="sr-fade flex justify-center md:justify-start gap-4 mt-6">
+          <Link to="/community" className="bg-pink-600 text-white px-6 py-2 rounded-full shadow hover:bg-pink-700 transition">
+            Join the Community
+          </Link>
+          <Link to="/gallery" className="bg-blue-600 text-white px-6 py-2 rounded-full shadow hover:bg-blue-700 transition">
+            Explore Gallery
+          </Link>
+        </div>
+
+        {/* News Feed */}
+        <div className="sr-fade mt-10">
+          <h2 className="text-2xl font-semibold text-blue-800 mb-4">Latest News</h2>
+          <ul className="space-y-3 max-h-64 overflow-y-auto pr-2">
+            {news.map((item, index) => (
+              <li key={index} className="p-3 bg-white rounded shadow hover:bg-gray-50 transition">
+                <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-blue-700 font-medium">
+                  {item.title}
+                </a>
+                <p className="text-gray-600 text-sm mt-1">
+                  {new Date(item.publishedAt).toLocaleDateString()}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="pb-20" />
+      </div>
+    </section>
+  );
+};
+
+export default HomePage;
