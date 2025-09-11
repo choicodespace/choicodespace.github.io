@@ -1,3 +1,4 @@
+// src/pages/AdminDashboard.jsx
 import React, { useEffect, useState } from 'react';
 import {
   AppBar,
@@ -19,6 +20,7 @@ import { Edit as EditIcon, Delete as DeleteIcon, Logout as LogoutIcon } from '@m
 import { collection, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { getAuth, signOut } from 'firebase/auth';
 import { db } from '../firebase';
+import { toast } from 'react-toastify';
 
 export default function AdminDashboard() {
   const [tabIndex, setTabIndex] = useState(0);
@@ -74,27 +76,49 @@ export default function AdminDashboard() {
     fetchAll();
   };
 
+  const updateStatus = async (col, id, status) => {
+    const docRef = doc(db, col, id);
+    await updateDoc(docRef, { status });
+    if (status === 'Approved') {
+      const row = rows[col].find(r => r.id === id);
+      // Simulate email notification
+      console.log(`Email sent to ${row.email}: Payment for ${id} has been approved.`);
+      toast.success(`Payment ${id} approved. Email notification sent to ${row.email}.`);
+    }
+    fetchAll();
+  };
+
   // Define columns for each type
   const columnDefs = {
     payments: [
       { field: 'email', headerName: 'Email', flex: 1, editable: false },
       { field: 'fullName', headerName: 'Full Name', flex: 1, editable: false },
-      {
-        field: 'total',
-        headerName: 'Total',
-        flex: 0.5,
-        type: 'number',
-      },
-      {
-        field: 'paymentMethod',
-        headerName: 'Method',
-        width: 150,
-      },
+      { field: 'total', headerName: 'Total', flex: 0.5, type: 'number' },
+      { field: 'paymentMethod', headerName: 'Method', width: 150 },
+      { field: 'status', headerName: 'Status', width: 120 },
       {
         field: 'actions',
         headerName: 'Actions',
         renderCell: params => (
           <>
+            <Button
+              size="small"
+              variant="contained"
+              color="warning"
+              onClick={() => updateStatus('payments', params.row.id, 'Pending')}
+              disabled={params.row.status === 'Pending'}
+            >
+              Pending
+            </Button>
+            <Button
+              size="small"
+              variant="contained"
+              color="success"
+              onClick={() => updateStatus('payments', params.row.id, 'Approved')}
+              disabled={params.row.status === 'Approved'}
+            >
+              Approve
+            </Button>
             <IconButton onClick={() => openEdit('payments', params.row)}>
               <EditIcon />
             </IconButton>
@@ -103,17 +127,12 @@ export default function AdminDashboard() {
             </IconButton>
           </>
         ),
-        width: 120,
+        width: 300,
       },
     ],
     cartItems: [
       { field: 'name', headerName: 'Item', flex: 1 },
-      {
-        field: 'quantity',
-        headerName: 'Qty',
-        type: 'number',
-        width: 80,
-      },
+      { field: 'quantity', headerName: 'Qty', type: 'number', width: 80 },
       {
         field: 'actions',
         headerName: 'Actions',
@@ -133,11 +152,30 @@ export default function AdminDashboard() {
     orders: [
       { field: 'email', headerName: 'Email', flex: 1 },
       { field: 'total', headerName: 'Total', type: 'number', width: 120 },
+      { field: 'status', headerName: 'Status', width: 120 },
       {
         field: 'actions',
         headerName: 'Actions',
         renderCell: params => (
           <>
+            <Button
+              size="small"
+              variant="contained"
+              color="warning"
+              onClick={() => updateStatus('orders', params.row.id, 'Pending')}
+              disabled={params.row.status === 'Pending'}
+            >
+              Pending
+            </Button>
+            <Button
+              size="small"
+              variant="contained"
+              color="success"
+              onClick={() => updateStatus('orders', params.row.id, 'Approved')}
+              disabled={params.row.status === 'Approved'}
+            >
+              Approve
+            </Button>
             <IconButton onClick={() => openEdit('orders', params.row)}>
               <EditIcon />
             </IconButton>
@@ -146,7 +184,7 @@ export default function AdminDashboard() {
             </IconButton>
           </>
         ),
-        width: 120,
+        width: 300,
       },
     ],
   };

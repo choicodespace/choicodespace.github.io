@@ -1,8 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { useCart } from '../hooks/useCart';
+// src/pages/OrderConfirmationPage.jsx
+import React, { useEffect, useState, useRef } from 'react';
+import { useCart } from '../context/CartContext';
 import { toast } from 'react-toastify';
 import { FaBitcoin, FaGift } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { getAuth } from 'firebase/auth';
+import { doc, setDoc, onSnapshot } from 'firebase/firestore';
+import { db } from '../firebase';
+import { Modal, Button, Box, Typography } from '@mui/material';
 
 const ADDRESSES = {
   bitcoin: 'bc1qk3gazvx0n6l6wtsc9v0fvhegvnnfuqh4w95cte',
@@ -22,14 +27,42 @@ const OrderConfirmationPage = () => {
   const [giftCardImage, setGiftCardImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [countdown, setCountdown] = useState(300); // 5 minutes in seconds
+  const [orderStatus, setOrderStatus] = useState('Pending');
   const navigate = useNavigate();
+  const location = useLocation();
+  const countdownRef = useRef(null);
+  const orderIdRef = useRef(null);
+
+  // Use cart from context or navigation state
+  const orderCart = location.state?.cart || cart;
+  const total = location.state?.total || orderCart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   useEffect(() => {
-    const timer = setTimeout(() => setInitialLoading(false), 800);
+    const timer = setTimeout(() => {
+      setInitialLoading(false);
+    }, 800);
     return () => clearTimeout(timer);
   }, []);
 
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  useEffect(() => {
+    if (showModal && countdown > 0 && orderStatus !== 'Approved') {
+      countdownRef.current = setInterval(() => {
+        setCountdown((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(countdownRef.current);
+  }, [showModal, orderStatus]);
+
+  useEffect(() => {
+    if (orderStatus === 'Approved') {
+      clearInterval(countdownRef.current);
+      toast.success('Payment approved! Email notification sent.');
+    } else if (countdown === 0) {
+      clearInterval(countdownRef.current);
+    }
+  }, [orderStatus, countdown]);
 
   const getDeliveryRange = () => {
     const now = new Date();
@@ -48,9 +81,10 @@ const OrderConfirmationPage = () => {
     return `${minDate.toDateString()} - ${maxDate.toDateString()}`;
   };
 
-  const handleConfirm = () => {
-    if (cart.length === 0) {
+  const handleConfirm = async () => {
+    if (orderCart.length === 0) {
       toast.error('Your cart is empty.');
+      navigate('/shop');
       return;
     }
 
@@ -60,15 +94,55 @@ const OrderConfirmationPage = () => {
     }
 
     setLoading(true);
-    toast.success(
-      `Order confirmed. Confirmation number will be sent to your email.\nExpected delivery: ${getDeliveryRange()}`
-    );
-    clearCart();
+    try {
+      const auth = getAuth();
+      const user = auth.currentUser;
 
-    setTimeout(() => {
+      // Save payment details to Firestore
+      const paymentDetails = {
+        userId: user?.uid || 'anonymous',
+        email: user?.email || 'no-email',
+        paymentMethod,
+        ...(paymentMethod === 'crypto' ? { cryptoType } : { giftCardType, giftCardCode }),
+        total,
+        createdAt: new Date().toISOString(),
+        status: 'Pending',
+      };
+
+      const paymentRef = doc(collection(db, 'payments'));
+      await setDoc(paymentRef, paymentDetails);
+      orderIdRef.current = paymentRef.id;
+
+      // Listen for status updates
+      const unsubscribe = onSnapshot(doc(db, 'payments', paymentRef.id), (doc) => {
+        if (doc.exists()) {
+          const data = doc.data();
+          setOrderStatus(data.status);
+          if (data.status === 'Approved') {
+            // Simulate email notification
+            console.log(`Email sent to ${user?.email || 'no-email'}: Payment approved for order ${paymentRef.id}`);
+            toast.success('Payment approved! Email notification sent.');
+          }
+        }
+      });
+
+      setShowModal(true);
+      toast.success(
+        `Order submitted. Waiting for payment confirmation.\nExpected delivery: ${getDeliveryRange()}`
+      );
+
+      return () => unsubscribe();
+    } catch (error) {
+      console.error('Error submitting payment:', error);
+      toast.error('Failed to submit payment. Try again.');
       setLoading(false);
-      navigate('/shipping');
-    }, 2000);
+    }
+  };
+
+  const handleContinue = () => {
+    setShowModal(false);
+    clearCart();
+    navigate('/shipping');
   };
 
   if (initialLoading) {
@@ -88,14 +162,13 @@ const OrderConfirmationPage = () => {
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-4">Order Confirmation</h1>
 
-      {/* Order Summary */}
       <div className="bg-white p-4 shadow rounded mb-6">
         <h2 className="text-lg font-semibold mb-2">Your Order</h2>
-        {cart.length === 0 ? (
+        {orderCart.length === 0 ? (
           <p>No items in cart.</p>
         ) : (
           <>
-            {cart.map((item) => (
+            {orderCart.map((item) => (
               <div key={item.id} className="flex justify-between text-sm border-b py-2">
                 <span>
                   {item.name} (x{item.quantity})
@@ -111,7 +184,6 @@ const OrderConfirmationPage = () => {
         )}
       </div>
 
-      {/* Payment Method Selector */}
       <div className="mb-4">
         <h2 className="text-lg font-semibold mb-2">Choose Payment Method</h2>
         <div className="flex gap-4">
@@ -134,7 +206,6 @@ const OrderConfirmationPage = () => {
         </div>
       </div>
 
-      {/* Payment Details */}
       {paymentMethod === 'crypto' ? (
         <div className="bg-white p-4 shadow rounded mb-6">
           <h3 className="font-semibold mb-2">Send Crypto Payment</h3>
@@ -196,7 +267,6 @@ const OrderConfirmationPage = () => {
         </div>
       )}
 
-      {/* Confirm Button */}
       <button
         onClick={handleConfirm}
         disabled={loading}
@@ -213,6 +283,48 @@ const OrderConfirmationPage = () => {
           'Confirm & Proceed'
         )}
       </button>
+
+      <Modal open={showModal} onClose={() => {}}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'white',
+            boxShadow: 24,
+            p: 4,
+            borderRadius: 2,
+          }}
+        >
+          <Typography variant="h6" mb={2}>
+            Waiting for Payment Confirmation
+          </Typography>
+          <Typography>
+            Time remaining: {Math.floor(countdown / 60)}:{(countdown % 60).toString().padStart(2, '0')}
+          </Typography>
+          {orderStatus === 'Approved' ? (
+            <Typography color="green" mt={2}>
+              Payment approved! You can proceed now.
+            </Typography>
+          ) : countdown === 0 ? (
+            <Typography color="orange" mt={2}>
+              Time expired. You can still proceed.
+            </Typography>
+          ) : (
+            <Typography mt={2}>Waiting for admin approval...</Typography>
+          )}
+          <Button
+            variant="contained"
+            onClick={handleContinue}
+            disabled={loading}
+            sx={{ mt: 2 }}
+          >
+            Continue
+          </Button>
+        </Box>
+      </Modal>
     </div>
   );
 };

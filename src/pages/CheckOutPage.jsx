@@ -1,5 +1,6 @@
+// src/pages/CheckoutPage.jsx
 import React, { useEffect, useState } from 'react';
-import { useCart } from '../hooks/useCart';
+import { useCart } from '../context/CartContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaShoppingCart } from 'react-icons/fa';
 import { getAuth } from 'firebase/auth';
@@ -7,7 +8,7 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
 
 const CheckoutPage = () => {
-  const { cart, clearCart } = useCart();
+  const { cart } = useCart();
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
@@ -27,16 +28,16 @@ const CheckoutPage = () => {
       const auth = getAuth();
       const user = auth.currentUser;
 
-      await addDoc(collection(db, 'orders'), {
+      const orderRef = await addDoc(collection(db, 'orders'), {
         userId: user?.uid || 'anonymous',
         email: user?.email || 'no-email',
         cart,
         total,
         createdAt: serverTimestamp(),
+        status: 'Pending', // Add status field
       });
 
-      clearCart();
-      navigate('/order-confirmation');
+      navigate('/order-confirmation', { state: { cart, total, orderId: orderRef.id } });
     } catch (error) {
       console.error('Error saving order:', error);
       alert('Failed to place order. Try again.');

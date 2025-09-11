@@ -121,7 +121,7 @@ const MembershipPage = () => {
 
         <button
           className="w-full border border-pink-600 text-pink-700 py-2 rounded hover:bg-pink-50"
-          onClick={() => navigate('/shop-merch')}
+          onClick={() => navigate('/shop')}
         >
           View Signed Merchandise
         </button>
