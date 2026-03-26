@@ -81,7 +81,7 @@ const AuthModal = ({ onClose }) => {
           <button
             onClick={() => setTab('login')}
             className={`px-4 py-2 ${
-              tab === 'login' ? 'bg-pink-600 text-white' : 'bg-gray-200'
+              tab === 'login' ? 'bg-black text-white' : 'bg-gray-200'
             }`}
           >
             Login
@@ -89,7 +89,7 @@ const AuthModal = ({ onClose }) => {
           <button
             onClick={() => setTab('register')}
             className={`px-4 py-2 ${
-              tab === 'register' ? 'bg-pink-600 text-white' : 'bg-gray-200'
+              tab === 'register' ? 'bg-black text-white' : 'bg-gray-200'
             }`}
           >
             Register
@@ -99,7 +99,7 @@ const AuthModal = ({ onClose }) => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {tab === 'register' && (
             <div className="flex items-center border px-3 py-2 rounded">
-              <FaUser className="text-pink-400 mr-2" />
+              <FaUser className="text-gray-600 mr-2" />
               <input
                 name="fullName"
                 placeholder="Full Name"
@@ -112,7 +112,7 @@ const AuthModal = ({ onClose }) => {
           )}
 
           <div className="flex items-center border px-3 py-2 rounded">
-            <FaEnvelope className="text-pink-400 mr-2" />
+            <FaEnvelope className="text-gray-600 mr-2" />
             <input
               type="email"
               name="email"
@@ -125,7 +125,7 @@ const AuthModal = ({ onClose }) => {
           </div>
 
           <div className="flex items-center border px-3 py-2 rounded">
-            <FaLock className="text-pink-400 mr-2" />
+            <FaLock className="text-gray-600 mr-2" />
             <input
               type="password"
               name="password"
@@ -139,7 +139,7 @@ const AuthModal = ({ onClose }) => {
 
           {tab === 'register' && (
             <div className="flex items-center border px-3 py-2 rounded">
-              <FaLock className="text-pink-400 mr-2" />
+              <FaLock className="text-gray-600 mr-2" />
               <input
                 type="password"
                 name="confirmPassword"

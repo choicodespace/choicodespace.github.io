@@ -12,10 +12,10 @@ const TOPProfile = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen bg-white">
+      <div className="flex justify-center items-center h-screen bg-black">
         <div className="relative w-16 h-16">
-          <div className="absolute inset-0 rounded-full border-4 border-pink-500 border-t-transparent animate-spin" />
-          <span className="absolute inset-0 flex items-center justify-center text-pink-700 font-bold">
+          <div className="absolute inset-0 rounded-full border-4 border-gray-200 border-t-transparent animate-spin" />
+          <span className="absolute inset-0 flex items-center justify-center text-white font-bold">
             T.O.P
           </span>
         </div>
@@ -24,10 +24,10 @@ const TOPProfile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white py-10 px-4">
+    <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 py-10 px-4 text-gray-100">
       {/* Profile Section */}
-      <div className="max-w-4xl mx-auto bg-white p-6 rounded shadow-sm border border-gray-200">
-        <div className="md:flex md:items-center gap-8 mb-10 border-b pb-6">
+      <div className="max-w-4xl mx-auto bg-gray-900/80 p-6 rounded-2xl shadow-2xl border border-gray-700">
+        <div className="md:flex md:items-center gap-8 mb-10 border-b border-gray-700 pb-6">
           {/* Image */}
           <div className="flex-shrink-0 w-full md:w-64 mb-6 md:mb-0">
             <img
@@ -39,18 +39,18 @@ const TOPProfile = () => {
 
           {/* Details */}
           <div className="flex-1 space-y-3">
-            <h1 className="text-2xl font-bold text-gray-800">T.O.P 최승현</h1>
+            <h1 className="text-3xl font-bold text-white">T.O.P 최승현</h1>
             <div className="flex items-center gap-2 text-lg">
               <a
                 href="https://www.instagram.com/ttt?igsh=bnNqOGVmYjIzaHJr"
-                className="flex items-center text-pink-600 gap-1 hover:text-pink-800 transition"
+                className="flex items-center text-white gap-1 hover:text-gray-300 transition"
               >
                 <FaInstagram />
                 <span className="text-sm">@ttt</span>
               </a>
               <a
                 href="https://www.facebook.com/share/19rv7u1UZp/?mibextid=wwXIfr"
-                className="flex items-center gap-1 text-blue-600 hover:text-blue-800 transition"
+                className="flex items-center gap-1 text-gray-200 hover:text-gray-400 transition"
               >
                 <FaFacebook />
                 <span className="text-sm">@최승현 ttt</span>
@@ -58,30 +58,40 @@ const TOPProfile = () => {
 
               <a
                 href="https://t.me/topchoifanchannel"
-                className="flex items-center gap-1 text-blue-600 hover:text-blue-800 transition"
+                className="flex items-center gap-1 text-gray-200 hover:text-gray-400 transition"
               >
                 <FaTelegram />
                 <span className="text-sm">T.O.P Fan Hub</span>
               </a>
             </div>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-300">
               <strong>생일:</strong> 1987년 11월 4일
             </p>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-300">
               <strong>데뷔:</strong> 2008년 디지털 싱글 앨범 'Turn it Up'
             </p>
           </div>
         </div>
 
+        {/* Album Spotlight */}
+        <div className="max-w-4xl mx-auto mt-4 bg-white/10 border border-gray-700 rounded-xl p-4">
+          <h3 className="text-xl font-bold text-white">New Album Drop: Eclipse</h3>
+          <p className="text-gray-200">Scheduled release date: April 10, 2026. Pre-orders are available now in the shop.</p>
+          <div className="mt-3 flex gap-3">
+            <a href="/shop" className="px-4 py-2 rounded-full bg-white text-black font-semibold hover:bg-gray-200 transition">Pre-Order</a>
+            <a href="/top" className="px-4 py-2 rounded-full bg-gray-800 text-white font-semibold hover:bg-gray-700 transition">Read Album Notes</a>
+          </div>
+        </div>
+
         {/* Activities */}
         <div className="space-y-10">
-          <h2 className="text-center text-2xl font-bold text-gray-800 uppercase tracking-wide">
-            Activities
+          <h2 className="text-center text-2xl font-bold text-white uppercase tracking-wide">
+            Latest Official Album: Eclipse
           </h2>
 
           {/* Awards */}
           <section>
-            <h3 className="text-lg font-bold border-b border-gray-300 pb-2 mb-4">수상내역</h3>
+            <h3 className="text-lg font-bold border-b border-gray-600 pb-2 mb-4">수상내역</h3>
             <ul className="list-disc list-inside space-y-2 text-sm text-gray-700">
               <li><strong>2015:</strong> Prudential Eye Awards – Visual Culture Award</li>
               <li><strong>2013:</strong> 18th BIFF – Asia Star Awards (Best New Actor)</li>
@@ -97,7 +107,7 @@ const TOPProfile = () => {
 
           {/* Filmography */}
           <section>
-            <h3 className="text-lg font-bold border-b border-gray-300 pb-2 mb-4">활동내역</h3>
+            <h3 className="text-lg font-bold border-b border-gray-600 pb-2 mb-4">활동내역</h3>
             <ul className="list-disc list-inside space-y-2 text-sm text-gray-700">
               <li><strong>2024:</strong> Squid Game 2 – Role: Thanos</li>
               <li><strong>2016:</strong> Out of Control</li>
@@ -114,7 +124,7 @@ const TOPProfile = () => {
 
           {/* Music */}
           <section>
-            <h3 className="text-lg font-bold border-b border-gray-300 pb-2 mb-4">음악</h3>
+            <h3 className="text-lg font-bold border-b border-gray-600 pb-2 mb-4">음악</h3>
             <ul className="list-disc list-inside space-y-2 text-sm text-gray-700">
               <li><strong>2013:</strong> DOOM DADA</li>
               <li><strong>2010:</strong> Turn It Up, Today, Oh Mom</li>

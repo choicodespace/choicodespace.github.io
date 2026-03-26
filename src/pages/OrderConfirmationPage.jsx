@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { FaBitcoin, FaGift } from 'react-icons/fa';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { getAuth } from 'firebase/auth';
-import { doc, setDoc, onSnapshot } from 'firebase/firestore';
+import { doc, setDoc, onSnapshot, collection } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Modal, Button, Box, Typography } from '@mui/material';
 
@@ -318,7 +318,7 @@ const OrderConfirmationPage = () => {
           <Button
             variant="contained"
             onClick={handleContinue}
-            disabled={loading}
+            disabled={orderStatus !== 'Approved' && countdown > 0}
             sx={{ mt: 2 }}
           >
             Continue

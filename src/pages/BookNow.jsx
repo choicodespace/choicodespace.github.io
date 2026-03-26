@@ -60,7 +60,7 @@ const MembershipPage = () => {
 
   return (
     <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-3xl font-bold text-pink-800 mb-6 text-center">Booking Options</h1>
+      <h1 className="text-3xl font-bold text-black mb-6 text-center">Booking Options</h1>
 
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 p-3 mb-4 rounded">
@@ -74,7 +74,7 @@ const MembershipPage = () => {
             key={option.id}
             className={`p-4 border rounded cursor-pointer ${
               selected.includes(option.id)
-                ? 'bg-pink-100 border-pink-500'
+                ? 'bg-gray-100 border-black'
                 : 'bg-white'
             }`}
             onClick={() => handleSelect(option.id)}
@@ -90,7 +90,7 @@ const MembershipPage = () => {
       {/* Summary Section */}
       {selectedItems.length > 0 && (
         <div className="bg-gray-50 border border-gray-300 p-4 mt-6 rounded-lg">
-          <h3 className="font-bold text-lg mb-3 text-pink-700">Summary</h3>
+          <h3 className="font-bold text-lg mb-3 text-black">Summary</h3>
           <ul className="space-y-2 text-sm text-gray-700">
             {selectedItems.map((item) => (
               <li key={item.id} className="flex justify-between">
@@ -114,13 +114,13 @@ const MembershipPage = () => {
       <div className="mt-8 flex flex-col gap-4">
         <button
           onClick={handleSubmit}
-          className="w-full bg-pink-700 text-white py-2 rounded hover:bg-pink-600"
+          className="w-full bg-black text-white py-2 rounded hover:bg-gray-800"
         >
           Pay ${total || 0} Now
         </button>
 
         <button
-          className="w-full border border-pink-600 text-pink-700 py-2 rounded hover:bg-pink-50"
+          className="w-full border border-black text-black py-2 rounded hover:bg-gray-50"
           onClick={() => navigate('/shop')}
         >
           View Signed Merchandise

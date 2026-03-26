@@ -52,8 +52,8 @@ const ProductCard = ({ product }) => {
           alt={product.name}
           className="w-full h-80 object-cover rounded mb-3"
         />
-        <h3 className="text-lg text-pink-600 font-semibold">{product.name}</h3>
-        <p className="text-pink-800 font-bold">${product.price.toFixed(2)}</p>
+        <h3 className="text-lg text-black font-semibold">{product.name}</h3>
+        <p className="text-gray-800 font-bold">${product.price.toFixed(2)}</p>
       </Link>
 
       {/* 🔘 Selectors */}
@@ -88,7 +88,7 @@ const ProductCard = ({ product }) => {
           onClick={handleAddToCart}
           disabled={adding}
           className={`w-full text-sm py-2 px-3 rounded text-white ${
-            adding ? 'bg-gray-400 cursor-not-allowed' : 'bg-pink-800 hover:bg-gray-800'
+            adding ? 'bg-gray-400 cursor-not-allowed' : 'bg-black hover:bg-gray-800'
           }`}
         >
           {adding ? 'Adding...' : 'Add to Cart'}

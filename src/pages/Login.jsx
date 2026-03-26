@@ -30,12 +30,12 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-pink-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md w-full max-w-md space-y-4">
-        <h2 className="text-2xl font-bold text-pink-600 text-center">Login</h2>
+        <h2 className="text-2xl font-bold text-black text-center">Login</h2>
 
         <div className="flex items-center border rounded px-3 py-2">
-          <FaEnvelope className="text-pink-400 mr-2" />
+          <FaEnvelope className="text-gray-600 mr-2" />
           <input
             type="email"
             name="email"
@@ -48,7 +48,7 @@ const Login = () => {
         </div>
 
         <div className="flex items-center border rounded px-3 py-2">
-          <FaLock className="text-pink-400 mr-2" />
+          <FaLock className="text-gray-600 mr-2" />
           <input
             type="password"
             name="password"
@@ -60,12 +60,12 @@ const Login = () => {
           />
         </div>
 
-        <button type="submit" className="w-full bg-pink-600 text-white py-2 rounded hover:bg-pink-700 transition">
+        <button type="submit" className="w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition">
           Login
         </button>
 
         <p className="text-center text-sm">
-          Don't have an account? <Link to="/signup" className="text-pink-600 font-semibold">Register</Link>
+          Don't have an account? <Link to="/signup" className="text-black font-semibold">Register</Link>
         </p>
       </form>
     </div>
